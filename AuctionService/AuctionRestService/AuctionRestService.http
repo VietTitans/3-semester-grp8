@@ -1,0 +1,6 @@
+@UserRestService_HostAddress = http://localhost:5252
+
+GET {{UserRestService_HostAddress}}/auction/
+Accept: application/json
+
+###

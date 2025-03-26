@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.12.35707.178
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuctionData", "AuctionData\AuctionData.csproj", "{90EA8AAE-A5C7-44C2-BE10-8597E55DDDE8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuctionDataTest", "AuctionDataTest\AuctionDataTest.csproj", "{2E17B8AE-ACF7-46AD-87B7-A6D53D6AB94C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuctionRestService", "AuctionRestService\AuctionRestService.csproj", "{CFFBB52B-BCC9-4162-99D6-30EC8A6E91BD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{90EA8AAE-A5C7-44C2-BE10-8597E55DDDE8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{90EA8AAE-A5C7-44C2-BE10-8597E55DDDE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{90EA8AAE-A5C7-44C2-BE10-8597E55DDDE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{90EA8AAE-A5C7-44C2-BE10-8597E55DDDE8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2E17B8AE-ACF7-46AD-87B7-A6D53D6AB94C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2E17B8AE-ACF7-46AD-87B7-A6D53D6AB94C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2E17B8AE-ACF7-46AD-87B7-A6D53D6AB94C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2E17B8AE-ACF7-46AD-87B7-A6D53D6AB94C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CFFBB52B-BCC9-4162-99D6-30EC8A6E91BD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CFFBB52B-BCC9-4162-99D6-30EC8A6E91BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CFFBB52B-BCC9-4162-99D6-30EC8A6E91BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CFFBB52B-BCC9-4162-99D6-30EC8A6E91BD}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
