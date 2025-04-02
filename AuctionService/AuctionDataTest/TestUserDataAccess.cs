@@ -36,5 +36,20 @@ namespace AuctionDataTest
             Assert.True(usersWereRead);
         }
 
+        [Fact]
+        public void UserPropertiesUpdated_When_UserUpdated()
+        {
+            //arrange
+            User user = new(Enviroment.MachineName + "Tom", "Tomsen@gmail.com" + DateTime.Now.ToLongTimeString());
+            
+
+            //act
+
+            //assert
+
+        }
+
+
+
     }
 }
