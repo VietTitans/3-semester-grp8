@@ -2,17 +2,18 @@
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using AuctionData.ModelLayer;
+using Xunit;
 
 namespace AuctionData.DatabaseLayer
 {
     public class UserDatabaseAccess : IUserAccess
     {
-
         private readonly string? _connectionString;
 
         public UserDatabaseAccess(IConfiguration inConfig)
         {
             _connectionString = inConfig.GetConnectionString("AuctionConnection");
+            
         }
 
         // For test (convenience)
