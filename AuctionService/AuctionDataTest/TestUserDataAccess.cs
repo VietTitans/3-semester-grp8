@@ -36,5 +36,25 @@ namespace AuctionDataTest
             Assert.True(usersWereRead);
         }
 
+        [Fact]
+        public void TestUserIsNoLongerInDatabase_When_UserIsDeletedByID()
+        {
+            // Arrange
+            User userToDelete = new User();
+            userToDelete.Username = "TestUser";
+            userToDelete.Email = "TestEmail";
+            int idOfUserToDelete = _userAccess.CreateUser(userToDelete);
+            
+
+            // Act
+            bool userIsDeleted = _userAccess.DeleteUserById(idOfUserToDelete);
+            User userFoundAfterDeletion = _userAccess.GetUserById(idOfUserToDelete);
+
+            // Assert
+            Assert.True(userIsDeleted);
+            Assert.Null(userFoundAfterDeletion);
+
+        }
+
     }
 }
