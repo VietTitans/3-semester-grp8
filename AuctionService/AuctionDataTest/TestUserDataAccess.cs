@@ -5,20 +5,25 @@ using AuctionData.ModelLayer;
 using Xunit;
 using Xunit.Abstractions;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using Microsoft.Extensions.Configuration;
 
 namespace AuctionDataTest
 {
     public class TestUserDataAccess: IClassFixture<DatabaseFixture>
     {
-        private readonly DatabaseFixture _fixture;
+        ///private readonly DatabaseFixture _fixture;
         private readonly ITestOutputHelper _extraOutput;
         private readonly IUserAccess _userAccess;
-        private readonly string _connectionString = "Data Source=localhost;Initial Catalog=AuctionDB;Persist Security Info=True;User ID=sa;Password=@12tf56so;Encrypt=False";
-        public TestUserDataAccess(ITestOutputHelper tOutput, DatabaseFixture fixture)
+        //public TestUserDataAccess(ITestOutputHelper tOutput, DatabaseFixture fixture, IConfiguration inConfig)
+        //{
+        //    _extraOutput = tOutput;
+        //    _userAccess = new UserDatabaseAccess(inConfig);
+        //    _fixture = fixture;
+        //}
+
+        public TestUserDataAccess(IConfiguration inConfig)
         {
-            _extraOutput = tOutput;
-            _userAccess = new UserDatabaseAccess(_connectionString);
-            _fixture = fixture;
+            _userAccess = new UserDatabaseAccess(inConfig);
         }
 
         [Fact]

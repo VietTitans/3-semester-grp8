@@ -23,6 +23,7 @@ namespace AuctionData.DatabaseLayer
         }
 
         // Dapper version
+        // TODO missing profilepicture on create
         public int CreateUser(User userToAdd)
         {
             int insertedId = -1;
@@ -101,7 +102,7 @@ namespace AuctionData.DatabaseLayer
         public User GetUserById(int findId)
         {
             const string queryString = @"
-        SELECT Id, Username, Email
+        SELECT Id, Username, Email, ProfilePicture
         FROM [User]
         WHERE Id = @Id";
 
@@ -149,7 +150,7 @@ namespace AuctionData.DatabaseLayer
         public List<User> GetUserAll()
         {
             const string queryString = @"
-        SELECT Id, Username, Email
+        SELECT Id, Username, Email, ProfilePicture
         FROM [User]";
 
             using (SqlConnection con = new SqlConnection(_connectionString))

@@ -27,14 +27,14 @@ namespace AuctionRestService.ModelConversion
         public static UserDTO? FromUser(User inUser)
         {
             if (inUser == null) return null;
-            return new UserDTO(inUser.Username, inUser.Email);
+            return new UserDTO(inUser.Id, inUser.Username, inUser.Email, inUser.ProfilePicture);
         }
 
         // Convert from UserDTO object to User object
         public static User? ToUser(UserDTO inDto)
         {
             if (inDto == null) return null;
-            return new User(inDto.Username, inDto.Email);
+            return new User(inDto.Id, inDto.Username, inDto.Email, inDto.ProfilePicture);
         }
     }
 }
