@@ -1,35 +1,39 @@
 ﻿using System.Diagnostics;
 using AuctionData.DatabaseLayer;
 using AuctionData.ModelLayer;
+using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.Json;
 
 
 namespace AuctionDataTest;
-public class DatabaseFixture
+public class DatabaseFixture : IDisposable
 {
-    private IConfiguration inConfig;
 
     //Before all
     public DatabaseFixture()
     {
         // Setup logic before all tests are run
-        User testUser1 = new User(GetPcName() + "TestUser1", "TestEmail1");
-        User testUser2 = new User(GetPcName() + "TestUser2", "TestEmail2");
-        User testUser3 = new User(GetPcName() + "TestUser3", "TestEmail3");
-        User testUser4 = new User(GetPcName() + "TestUser4", "TestEmail4");
-        User testUser5 = new User(GetPcName() + "TestUser5", "TestEmail5");
+
+
+        TestUser1 = new User("TestUser1", "TestEmail1", "TestProfilePicture1");
+        User testUser2 = new User(GetPcName() + "TestUser2", "TestEmail2", "TestProfilePicture2");
+        User testUser3 = new User(GetPcName() + "TestUser3", "TestEmail3", "TestProfilePicture3");
+        User testUser4 = new User(GetPcName() + "TestUser4", "TestEmail4", "TestProfilePicture4");
+        User testUser5 = new User(GetPcName() + "TestUser5", "TestEmail5", "TestProfilePicture5");
 
         var connectionString = GetConnectionString();
 
-        UserDatabaseAccess userAccess = new UserDatabaseAccess(connectionString);
-        userAccess.CreateUser(testUser1);
+        UserAccess = new UserDatabaseAccess(connectionString);
+        UserAccess.CreateUser(TestUser1);
 
 
 
         Debug.WriteLine("Setting up database...");
     }
 
+    public User TestUser1 { get; private set; }
+    public IUserAccess UserAccess { get; set; }
     private string GetConnectionString()
     {
         var inConfig = new ConfigurationBuilder()

@@ -11,20 +11,19 @@ namespace AuctionDataTest
 {
     public class TestUserDataAccess: IClassFixture<DatabaseFixture>
     {
-        ///private readonly DatabaseFixture _fixture;
+        private readonly DatabaseFixture _fixture;
         private readonly ITestOutputHelper _extraOutput;
-        private readonly IUserAccess _userAccess;
-        //public TestUserDataAccess(ITestOutputHelper tOutput, DatabaseFixture fixture, IConfiguration inConfig)
-        //{
-        //    _extraOutput = tOutput;
-        //    _userAccess = new UserDatabaseAccess(inConfig);
-        //    _fixture = fixture;
-        //}
-
-        public TestUserDataAccess(IConfiguration inConfig)
+        
+        public TestUserDataAccess(ITestOutputHelper tOutput, DatabaseFixture fixture)
         {
-            _userAccess = new UserDatabaseAccess(inConfig);
+            _extraOutput = tOutput;
+            _fixture = fixture;
         }
+
+        //public TestUserDataAccess(IConfiguration inConfig)
+        //{
+        //    _userAccess = new UserDatabaseAccess(inConfig);
+        //}
 
         [Fact]
         public void TestGetUserAll()
@@ -32,7 +31,7 @@ namespace AuctionDataTest
             // Arrange
 
             // Act
-            List<User> readUsers = _userAccess.GetUserAll();
+            List<User> readUsers = _fixture.UserAccess.GetUserAll();
             bool usersWereRead = (readUsers.Count > 0);
             // Print additional output
             _extraOutput.WriteLine("Number of users: " + readUsers.Count);
@@ -48,12 +47,12 @@ namespace AuctionDataTest
             User userToDelete = new User();
             userToDelete.Username = "TestUser";
             userToDelete.Email = "TestEmail";
-            int idOfUserToDelete = _userAccess.CreateUser(userToDelete);
+            int idOfUserToDelete = _fixture.UserAccess.CreateUser(userToDelete);
             
 
             // Act
-            bool userIsDeleted = _userAccess.DeleteUserById(idOfUserToDelete);
-            User userFoundAfterDeletion = _userAccess.GetUserById(idOfUserToDelete);
+            bool userIsDeleted = _fixture.UserAccess.DeleteUserById(idOfUserToDelete);
+            User? userFoundAfterDeletion = _fixture.UserAccess.GetUserById(idOfUserToDelete);
 
             // Assert
             Assert.True(userIsDeleted);
@@ -72,6 +71,12 @@ namespace AuctionDataTest
 
             //assert
 
+        }
+
+        [Fact]
+        public void TestTest()
+        {
+            Assert.Equal("TestUser1", _fixture.TestUser1.Username);
         }
 
     }
