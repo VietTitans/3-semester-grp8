@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.12.35707.178 d17.12
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuctionWebMVCApp", "AuctionWebMVCApp\AuctionWebMVCApp.csproj", "{1FBDF495-24DD-4F63-B7AA-5E9BF93BA091}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuctionData", "AuctionData\AuctionData.csproj", "{03276988-EBF6-4B30-A96D-AC1B3CAE4598}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1FBDF495-24DD-4F63-B7AA-5E9BF93BA091}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1FBDF495-24DD-4F63-B7AA-5E9BF93BA091}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1FBDF495-24DD-4F63-B7AA-5E9BF93BA091}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1FBDF495-24DD-4F63-B7AA-5E9BF93BA091}.Release|Any CPU.Build.0 = Release|Any CPU
+		{03276988-EBF6-4B30-A96D-AC1B3CAE4598}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{03276988-EBF6-4B30-A96D-AC1B3CAE4598}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{03276988-EBF6-4B30-A96D-AC1B3CAE4598}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{03276988-EBF6-4B30-A96D-AC1B3CAE4598}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
