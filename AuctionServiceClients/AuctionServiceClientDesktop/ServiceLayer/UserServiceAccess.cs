@@ -9,49 +9,58 @@ namespace AuctionServiceClientDesktop.ServiceLayer
     public class UserServiceAccess : ServiceConnection, IUserAccess
     {
 
+        static readonly string authenType = "Bearer";
+
         public UserServiceAccess() : base("https://localhost:7101/api/users/")
         {
         }
 
-        // Method to retrieve users – must handle possible HTTP status codes returned from API
-        public async Task<List<User>?> GetUsers(int id = -1)
+        public HttpStatusCode CurrentHttpStatusCode { get; set; }
+
+        // Method to retrieve User(s)
+        public async Task<List<User>?> GetUsers(string tokenToUse, int id = -1)
         {
             List<User>? usersFromService = null;
 
             UseUrl = BaseUrl;
-            bool oneUsersById = (id > 0);
-            if (oneUsersById)
+            bool hasValidId = (id > 0);
+            if (hasValidId)
             {
-                UseUrl += id;
+                UseUrl += id.ToString();
             }
+
+            // Must add Bearer token to request header
+            string bearerTokenValue = authenType + " " + tokenToUse;
+            SetHeaders("Authorization", bearerTokenValue);
+
             try
             {
-                var serviceResponse = await base.CallServiceGet();
-                // if success (200–299)
+                var serviceResponse = await CallServiceGet();
+                CurrentHttpStatusCode = serviceResponse != null ? serviceResponse.StatusCode : HttpStatusCode.BadRequest;
+
                 if (serviceResponse != null && serviceResponse.IsSuccessStatusCode)
                 {
-                    // 200 with data returned
-                    if (serviceResponse.StatusCode == HttpStatusCode.OK)
+                    var content = await serviceResponse.Content.ReadAsStringAsync();
+                    if (hasValidId)
                     {
-                        string responseData = await serviceResponse.Content.ReadAsStringAsync();
-                        // if asked for 1 user – else asked for all users
-                        if (oneUsersById)
+                        User? foundUser = JsonConvert.DeserializeObject<User>(content);
+                        if (foundUser != null)
                         {
-                            User? foundUser = JsonConvert.DeserializeObject<User>(responseData);
-                            if (foundUser != null)
-                            {
-                                usersFromService = new List<User> { foundUser };  // Must return list
-                            }
-                        }
-                        else
-                        {
-                            usersFromService = JsonConvert.DeserializeObject<List<User>>(responseData);
+                            usersFromService = new List<User>() { foundUser };
                         }
                     }
-                    else if (serviceResponse.StatusCode == HttpStatusCode.NoContent)
-                    {  // 204
-                        usersFromService = new List<User>();
+                    else
+                    {
+                        usersFromService = JsonConvert.DeserializeObject<List<User>>(content);
                     }
+                }
+                else if (serviceResponse != null && serviceResponse.StatusCode == HttpStatusCode.NoContent)
+                {
+                    usersFromService = new List<User>();
+                }
+                else
+                {
+                    usersFromService = null;
                 }
             }
             catch
@@ -61,28 +70,31 @@ namespace AuctionServiceClientDesktop.ServiceLayer
             return usersFromService;
         }
 
-        public async Task<int> SaveUser(User userToSave)
+        // Method to save User
+        public async Task<int> SaveUser(string tokenToUse, User userToSave)
         {
             int insertedUserId = -1;
-
             UseUrl = BaseUrl;
+
+            string bearerTokenValue = authenType + " " + tokenToUse;
+            SetHeaders("Authorization", bearerTokenValue);
+
             try
             {
-                string userJson = JsonConvert.SerializeObject(userToSave);
-                var httpContent = new StringContent(userJson, Encoding.UTF8, "application/json");
+                var json = JsonConvert.SerializeObject(userToSave);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+                var serviceResponse = await CallServicePost(content);
+                CurrentHttpStatusCode = serviceResponse != null ? serviceResponse.StatusCode : HttpStatusCode.BadRequest;
 
-                // Call service
-                var serviceResponse = await base.CallServicePost(httpContent);
-
-                // If success 200–299
                 if (serviceResponse != null && serviceResponse.IsSuccessStatusCode)
                 {
-                    string idString = await serviceResponse.Content.ReadAsStringAsync();
-                    bool idNumOk = int.TryParse(idString, out insertedUserId);
-                    if (!idNumOk)
-                    {
-                        insertedUserId = -2;
-                    }
+                    string resIdString = await serviceResponse.Content.ReadAsStringAsync();
+                    bool idIsOk = int.TryParse(resIdString, out insertedUserId);
+                    if (!idIsOk) { insertedUserId = -4; }
+                }
+                else
+                {
+                    insertedUserId = -2;
                 }
             }
             catch
@@ -92,7 +104,5 @@ namespace AuctionServiceClientDesktop.ServiceLayer
 
             return insertedUserId;
         }
-
     }
-
 }

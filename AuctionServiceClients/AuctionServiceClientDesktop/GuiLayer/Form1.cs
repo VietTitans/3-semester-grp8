@@ -1,4 +1,4 @@
-using AuctionServiceClientDesktop.ControlLayer;
+using AuctionServiceClientDesktop.Logic;
 using AuctionServiceClientDesktop.ModelLayer;
 
 namespace AuctionServiceClientDesktop

@@ -2,12 +2,14 @@
 using AuctionRestService.BusinesslogicLayer;
 using AuctionRestService.DTOs;
 using AuctionService.BusinesslogicLayer;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AuctionRestService.Controllers
 {
 
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class UsersController : ControllerBase
     {
 

@@ -42,5 +42,22 @@
         {
             throw new NotImplementedException();
         }
+
+        public void SetHeaders(string authStr, string bearerVal)
+        {
+            _httpEnabler.DefaultRequestHeaders.Remove(authStr);
+            _httpEnabler.DefaultRequestHeaders.Add(authStr, bearerVal);
+        }
+
+        public async Task<HttpResponseMessage?> CallServicePost(HttpRequestMessage postRequest)
+        {
+            HttpResponseMessage? hrm = null;
+            if (UseUrl != null)
+            {
+                hrm = await _httpEnabler.SendAsync(postRequest);
+            }
+            return hrm;
+        }
+
     }
 }

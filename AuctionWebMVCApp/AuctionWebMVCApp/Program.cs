@@ -1,6 +1,11 @@
+﻿using System.Text;
+using AuctionWebMVCApp.BusinessLogic;
 using AuctionWebMVCApp.Data;
+using AuctionWebMVCApp.Security;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,7 +21,37 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options =>
     options.User.RequireUniqueEmail = true;
 })
     .AddEntityFrameworkStores<ApplicationDbContext>();
+
+
+// ✅ Add JWT authentication
+var jwtKey = builder.Configuration["JwtSettings:SecretKey"];
+var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey));
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultScheme = IdentityConstants.ApplicationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme; // fallback for APIs
+})
+.AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = builder.Configuration["JwtSettings:Issuer"],
+        ValidAudience = builder.Configuration["JwtSettings:Audience"],
+        IssuerSigningKey = signingKey
+    };
+});
+
+
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddSingleton<ITokenManager, TokenManager>();
+builder.Services.AddTransient<UserLogic>();
+
 
 var app = builder.Build();
 

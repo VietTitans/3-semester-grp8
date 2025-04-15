@@ -2,78 +2,93 @@
 using System.Text;
 using Newtonsoft.Json;
 using AuctionData.Model;
+using Newtonsoft.Json.Linq;
 
 namespace AuctionData.Service
 {
     public class UserServiceAccess : ServiceConnection, IUserAccess
     {
 
-        public UserServiceAccess() : base("https://localhost:7101/api/users/")
-        {
-        }
+        static readonly string authenType = "Bearer";
 
-        // Method to retrieve users – must handle possible HTTP status codes returned from API
-        public async Task<List<User>?> GetUsers(int id = -1)
+        public UserServiceAccess() : base("https://localhost:7101/api/users/") { }
+
+        public HttpStatusCode CurrentHttpStatusCode { get; set; }
+
+        // Method to retrieve users – now requires token
+        public async Task<List<User>?> GetUsers(string tokenToUse, int id = -1)
         {
             List<User>? usersFromService = null;
 
+            Console.WriteLine("Token being used: " + tokenToUse);
+
+
             UseUrl = BaseUrl;
-            bool oneUsersById = (id > 0);
-            if (oneUsersById)
+            bool oneUserById = (id > 0);
+            if (oneUserById)
             {
-                UseUrl += id;
+                UseUrl += id.ToString();
             }
+
+            // 🔐 Add Authorization header
+            string bearerTokenValue = authenType + " " + tokenToUse;
+            SetHeaders("Authorization", bearerTokenValue);
+
+            Console.WriteLine("Token being used: " + bearerTokenValue);
+
             try
             {
                 var serviceResponse = await base.CallServiceGet();
-                // if success (200–299)
+                CurrentHttpStatusCode = serviceResponse?.StatusCode ?? HttpStatusCode.BadRequest;
+
                 if (serviceResponse != null && serviceResponse.IsSuccessStatusCode)
                 {
-                    // 200 with data returned
-                    if (serviceResponse.StatusCode == HttpStatusCode.OK)
+                    string responseData = await serviceResponse.Content.ReadAsStringAsync();
+
+                    if (oneUserById)
                     {
-                        string responseData = await serviceResponse.Content.ReadAsStringAsync();
-                        // if asked for 1 user – else asked for all users
-                        if (oneUsersById)
+                        User? foundUser = JsonConvert.DeserializeObject<User>(responseData);
+                        if (foundUser != null)
                         {
-                            User? foundUser = JsonConvert.DeserializeObject<User>(responseData);
-                            if (foundUser != null)
-                            {
-                                usersFromService = new List<User> { foundUser };  // Must return list
-                            }
-                        }
-                        else
-                        {
-                            usersFromService = JsonConvert.DeserializeObject<List<User>>(responseData);
+                            usersFromService = new List<User> { foundUser };
                         }
                     }
-                    else if (serviceResponse.StatusCode == HttpStatusCode.NoContent)
-                    {  // 204
-                        usersFromService = new List<User>();
+                    else
+                    {
+                        usersFromService = JsonConvert.DeserializeObject<List<User>>(responseData);
                     }
+                }
+                else if (serviceResponse?.StatusCode == HttpStatusCode.NoContent)
+                {
+                    usersFromService = new List<User>();
                 }
             }
             catch
             {
                 usersFromService = null;
             }
+
             return usersFromService;
         }
 
-        public async Task<int> SaveUser(User userToSave)
+        // Save method – also requires token
+        public async Task<int> SaveUser(string tokenToUse, User userToSave)
         {
             int insertedUserId = -1;
-
             UseUrl = BaseUrl;
+
+            // 🔐 Add Authorization header
+            string bearerTokenValue = authenType + " " + tokenToUse;
+            SetHeaders("Authorization", bearerTokenValue);
+
             try
             {
                 string userJson = JsonConvert.SerializeObject(userToSave);
                 var httpContent = new StringContent(userJson, Encoding.UTF8, "application/json");
 
-                // Call service
                 var serviceResponse = await base.CallServicePost(httpContent);
+                CurrentHttpStatusCode = serviceResponse?.StatusCode ?? HttpStatusCode.BadRequest;
 
-                // If success 200–299
                 if (serviceResponse != null && serviceResponse.IsSuccessStatusCode)
                 {
                     string idString = await serviceResponse.Content.ReadAsStringAsync();
@@ -83,6 +98,10 @@ namespace AuctionData.Service
                         insertedUserId = -2;
                     }
                 }
+                else
+                {
+                    insertedUserId = -2;
+                }
             }
             catch
             {
@@ -91,7 +110,5 @@ namespace AuctionData.Service
 
             return insertedUserId;
         }
-
     }
-
 }
